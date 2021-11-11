@@ -1,96 +1,82 @@
 package com.example.midtermoop;
 
-import javafx.animation.Animation;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
-public class Pacman extends Sprite {
+import java.util.BitSet;
 
-    private Input input;
-    private double speed;
-    MySounds mySounds;
-    boolean timer;
-    Animation animation;
-    protected int movement;
+public class Input {
 
-    public Pacman(Pane layer, Image image, double x, double y, double dx, double dy, double speed, Input input, MySounds ms) {
+    private BitSet KBitSet = new BitSet();
 
-        super(layer, image, x, y,  dx, dy);
+    private KeyCode upK = KeyCode.UP;
+    private KeyCode downK = KeyCode.DOWN;
+    private KeyCode leftK = KeyCode.LEFT;
+    private KeyCode rightK = KeyCode.RIGHT;
+    private KeyCode primaryK = KeyCode.SPACE;
+    private KeyCode secondaryWK = KeyCode.CONTROL;
 
-        this.speed = speed;
-        this.input = input;
-        mySounds = ms;
+    Scene scene;
 
+    public Input( Scene scene) {
+        this.scene = scene;
+    }
+
+    public void addListeners() {
+
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, keyPressedEventHandler);
+        scene.addEventFilter(KeyEvent.KEY_RELEASED, keyReleasedEventHandler);
 
     }
 
-    public void setSpeed(double speed) {
-        this.speed = speed;
+    public void removeListeners() {
+
+        scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyPressedEventHandler);
+        scene.removeEventFilter(KeyEvent.KEY_RELEASED, keyReleasedEventHandler);
+
     }
 
+    private EventHandler<KeyEvent> keyPressedEventHandler = new EventHandler<KeyEvent>() {
+        @Override
+        public void handle(KeyEvent event) {
+            KBitSet.set(event.getCode().ordinal(), true);
 
-    public void processInput() {
-
-        if( input.isMoveUp()) {
-            movement = 1;
-            dx = 0;
-            dy = -speed;
-
-        } else if( input.isMoveDown()) {
-            movement = 2;
-            dy = speed;
-            dx = 0;
         }
+    };
 
-        if( input.isMoveLeft()) {
-            movement = 3;
-            dx = -speed;
-            dy = 0;
+    private EventHandler<KeyEvent> keyReleasedEventHandler = new EventHandler<KeyEvent>() {
+        @Override
+        public void handle(KeyEvent event) {
+            KBitSet.set(event.getCode().ordinal(), false);
 
-        } else if( input.isMoveRight()) {
-            movement = 4;
-            dx = speed;
-            dy = 0;
         }
+    };
 
-
+    public boolean isMoveUp() {
+        return KBitSet.get( upK.ordinal()) && !KBitSet.get( downK.ordinal());
 
     }
 
-    public boolean imageTimer() {
-        new java.util.Timer().schedule(
-                new java.util.TimerTask() {
-                    @Override
-                    public void run() {
-                        timer = true;
-                    }
-                },
-                50
-        );
-
-        return timer;
+    public boolean isMoveDown() {
+        return KBitSet.get( downK.ordinal()) && !KBitSet.get( upK.ordinal());
     }
 
-    @Override
-    public void move() {
-        super.move();
-
-        checkBounds();
+    public boolean isMoveLeft() {
+        return KBitSet.get( leftK.ordinal()) && !KBitSet.get( rightK.ordinal());
     }
 
-    private void checkBounds() {
+    public boolean isMoveRight() {
+        return KBitSet.get( rightK.ordinal()) && !KBitSet.get( leftK.ordinal());
+    }
 
-        if( y < 0 ) {
-            y = 0;
-        } else if( (y+h) > Settings.SCENE_HEIGHT ) {
-            y = Settings.SCENE_HEIGHT-h;
-        }
+    public boolean isFirePrimaryWeapon() {
+        return KBitSet.get( primaryK.ordinal());
+    }
 
-        if( x < 0) {
-            x = 0;
-        } else if( (x+w) > Settings.SCENE_WIDTH ) {
-            x = Settings.SCENE_WIDTH-w;
-        }
+    public boolean isFireSecondaryWeapon() {
+        return KBitSet.get( secondaryWK.ordinal());
     }
 
 }
