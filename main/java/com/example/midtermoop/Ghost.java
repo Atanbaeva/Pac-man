@@ -3,30 +3,38 @@ package com.example.midtermoop;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
-public class Ghost extends Sprite {
+public class Enemy extends Sprite {
 
-    public Ghost(Pane layer, Image image, double x, double y, double dx, double dy ) {
+    public Enemy(Pane layer,
+                 Image image,
+                 double x,
+                 double y,
+                 double dx,
+                 double dy ) {
         super(layer, image, x, y, dx, dy);
     }
 
-    public void move() {
+    public void Mot() {
 
         switch (dir){
-            case 0: dy = -1;
-                dx=0;
+            case 0: Ydir = -1;
+                Xdir =0;
                 break;
-            case 1 :dy = 1;
-                dx=0;
+            case 1 :
+                Ydir = 1;
+                Xdir =0;
                 break;
-            case 2 :dx = 1;
-                dy=0;
+            case 2 :
+                Xdir = 1;
+                Ydir =0;
                 break;
-            case 3 :dx = -1;
-                dy=0;
+            case 3 :
+                Xdir = -1;
+                Ydir =0;
                 break;
         }
 
-        super.move();
+        super.Mot();
 
     }
 }
