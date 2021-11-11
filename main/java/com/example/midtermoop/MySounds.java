@@ -6,70 +6,71 @@ import javax.sound.sampled.Clip;
 
 
 
-public class MySounds {
+public class SoundE {
 
     protected static final String AudioPlayer = null;
 
-    public Clip PacBeginning = loadClip("/Sounds/pacman_beginning.wav");
-    public Clip PacChomp = loadClip("/Sounds/pacman_chomp.wav");
-    public Clip PacGhostEat = loadClip("/Sounds/pacman_eatghost.wav");
-    public Clip PacDeath = loadClip("/Sounds/pacman_death.wav");
+    public Clip PACS = loadClip("/Sounds/pacman_beginning.wav");
+    public Clip Pacm = loadClip("/Sounds/pacman_chomp.wav");
+    public Clip PACg = loadClip("/Sounds/pacman_eatghost.wav");
+    public Clip DEATH = loadClip("/Sounds/pacman_death.wav");
 
-    public MySounds() {
+    public SoundE() {
 
     }
 
     public Clip loadClip(String filename) {
-        Clip clip = null;
+        Clip music = null;
 
         try {
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(getClass().getResource(filename));
-            clip = AudioSystem.getClip();
-            clip.open(audioIn);
+            music = AudioSystem.getClip();
+            music.open(audioIn);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return (clip);
+        return (music);
 
     }
 
 
-    public void playClip(int index) {
+    public void MusicS(int index) {
 
         if (index == 1) {
-            stopClip(1);
-            PacBeginning.start();
+            Stop(1);
+            PACS.start();
         } else if (index == 2) {
-            if (!PacChomp.isRunning()) {
-                stopClip(2);
-                PacChomp.start();
+            if (!Pacm.isRunning()) {
+                Stop(2);
+                Pacm.start();
             }
         } else if (index == 3) {
-            if (!PacGhostEat.isRunning()) {
-                stopClip(3);
-                PacGhostEat.start();
+            if (!PACg.isRunning()) {
+                Stop(3);
+                PACg.start();
             }
-            PacGhostEat.setFramePosition(0);
+            PACg.setFramePosition(0);
         } else if (index == 4) {
-            if (!PacDeath.isRunning()) {
-                PacDeath.start();
+            if (!DEATH.isRunning()) {
+                DEATH.start();
             }
-            PacDeath.setFramePosition(0);
+            DEATH.setFramePosition(0);
 
         }
 
     }
 
-    public void stopClip(int index) {
+
+    public void Stop(int index) {
         if (index == 1) {
-            if (PacBeginning.isRunning())
-                PacBeginning.stop();
-            PacBeginning.setFramePosition(0);
+            if (PACS.isRunning())
+                PACS.stop();
+            PACS.setFramePosition(0);
         } else if (index == 2) {
-            if (PacChomp.isRunning())
-                PacChomp.stop();
-            PacChomp.setFramePosition(0);
+            if (Pacm.isRunning())
+                Pacm.stop();
+            Pacm.setFramePosition(0);
         }
     }
 }
