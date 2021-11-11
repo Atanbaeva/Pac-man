@@ -11,14 +11,14 @@ public abstract class Sprite {
     protected Image image;
     protected ImageView imageView;
     private Pane layer;
-    protected double x;
-    protected double y;
-    protected double dx;
-    protected double dy;
-    protected double w;
-    protected double h;
-    protected double frameWidth = 20;
-    protected double frameHeight = 20;
+    protected double X;
+    protected double Y;
+    protected double Xdir;
+    protected double Ydir;
+    protected double WIDTH;
+    protected double HEIGHT;
+    protected double fWidth = 20;
+    protected double fHeight = 20;
     int dir = 0;
     protected boolean collision2 = false;
 
@@ -26,71 +26,71 @@ public abstract class Sprite {
 
         this.layer = layer;
         this.image = image;
-        this.x = x;
-        this.y = y;
+        this.X = x;
+        this.Y = y;
 
-        this.dx = dx;
-        this.dy = dy;
+        this.Xdir = dx;
+        this.Ydir = dy;
 
         this.imageView = new ImageView(image);
         this.imageView.relocate(x, y);
 
-        this.w = image.getWidth();
-        this.h = image.getHeight();
+        this.WIDTH = image.getWidth();
+        this.HEIGHT = image.getHeight();
 
         addToLayer();
     }
 
     public void setImageView(Image image) {
         this.imageView = new ImageView(image);
-        this.imageView.relocate(x, y);
+        this.imageView.relocate(X, Y);
     }
 
 
-    public void move() {
-        x += dx;
-        y += dy;
+    public void Mot() {
+        X += Xdir;
+        Y += Ydir;
     }
 
     public void spriteMovement() {
-        x += dx;
-        y += dy;
+        X += Xdir;
+        Y += Ydir;
     }
 
     public boolean collidesWithCoord(Rectangle block, double x, double y) {
-        return (block.intersects(x, y, w, h));
+        return (block.intersects(x, y, WIDTH, HEIGHT));
 
     }
 
     public boolean collidesWith(Rectangle block) {
-        return (block.intersects(x, y, frameWidth, frameHeight));
+        return (block.intersects(X, Y, fWidth, fHeight));
 
     }
 
     public boolean collidesWith(Circle dot) {
-        return (dot.intersects(x, y, frameWidth, frameHeight));
+        return (dot.intersects(X, Y, fWidth, fHeight));
 
     }
 
     public void freeze() {
-        x -= dx;
-        y -= dy;
+        X -= Xdir;
+        Y -= Ydir;
     }
 
     public void updateUI() {
-        imageView.relocate(x, y);
+        imageView.relocate(X, Y);
     }
 
     public void updateUI(double x, double y) {
-        this.x = x;
-        this.y = y;
+        this.X = x;
+        this.Y = y;
         imageView.relocate(x, y);
     }
 
 
 
     public boolean collidesWith( Sprite otherSprite) {
-        return ( otherSprite.x + otherSprite.w >= x && otherSprite.y + otherSprite.h >= y && otherSprite.x <= x + w && otherSprite.y <= y + h);
+        return ( otherSprite.X + otherSprite.WIDTH >= X && otherSprite.Y + otherSprite.HEIGHT >= Y && otherSprite.X <= X + WIDTH && otherSprite.Y <= Y + HEIGHT);
     }
 
     public void addToLayer() {
@@ -102,11 +102,11 @@ public abstract class Sprite {
     }
 
     public double getCenterX() {
-        return x + w * 0.5;
+        return X + WIDTH * 0.5;
     }
 
     public double getCenterY() {
-        return y + h * 0.5;
+        return Y + HEIGHT * 0.5;
     }
 
 }
