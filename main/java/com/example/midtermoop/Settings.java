@@ -1,7 +1,7 @@
 package com.example.midtermoop;
-public class Settings {
+public class size {
 
-    public static double SCENE_WIDTH = 448;
-    public static double SCENE_HEIGHT = 576;
+    public static double SCENE_W = 448;
+    public static double SCENE_H = 576;
 
 }
