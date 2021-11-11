@@ -9,14 +9,14 @@ import java.util.BitSet;
 
 public class Input {
 
-    private BitSet keyboardBitSet = new BitSet();
+    private BitSet KBitSet = new BitSet();
 
-    private KeyCode upKey = KeyCode.UP;
-    private KeyCode downKey = KeyCode.DOWN;
-    private KeyCode leftKey = KeyCode.LEFT;
-    private KeyCode rightKey = KeyCode.RIGHT;
-    private KeyCode primaryWeaponKey = KeyCode.SPACE;
-    private KeyCode secondaryWeaponKey = KeyCode.CONTROL;
+    private KeyCode upK = KeyCode.UP;
+    private KeyCode downK = KeyCode.DOWN;
+    private KeyCode leftK = KeyCode.LEFT;
+    private KeyCode rightK = KeyCode.RIGHT;
+    private KeyCode primaryK = KeyCode.SPACE;
+    private KeyCode secondaryWK = KeyCode.CONTROL;
 
     Scene scene;
 
@@ -41,7 +41,7 @@ public class Input {
     private EventHandler<KeyEvent> keyPressedEventHandler = new EventHandler<KeyEvent>() {
         @Override
         public void handle(KeyEvent event) {
-            keyboardBitSet.set(event.getCode().ordinal(), true);
+            KBitSet.set(event.getCode().ordinal(), true);
 
         }
     };
@@ -49,33 +49,34 @@ public class Input {
     private EventHandler<KeyEvent> keyReleasedEventHandler = new EventHandler<KeyEvent>() {
         @Override
         public void handle(KeyEvent event) {
-            keyboardBitSet.set(event.getCode().ordinal(), false);
+            KBitSet.set(event.getCode().ordinal(), false);
 
         }
     };
 
     public boolean isMoveUp() {
-        return keyboardBitSet.get( upKey.ordinal()) && !keyboardBitSet.get( downKey.ordinal());
+        return KBitSet.get( upK.ordinal()) && !KBitSet.get( downK.ordinal());
+
     }
 
     public boolean isMoveDown() {
-        return keyboardBitSet.get( downKey.ordinal()) && !keyboardBitSet.get( upKey.ordinal());
+        return KBitSet.get( downK.ordinal()) && !KBitSet.get( upK.ordinal());
     }
 
     public boolean isMoveLeft() {
-        return keyboardBitSet.get( leftKey.ordinal()) && !keyboardBitSet.get( rightKey.ordinal());
+        return KBitSet.get( leftK.ordinal()) && !KBitSet.get( rightK.ordinal());
     }
 
     public boolean isMoveRight() {
-        return keyboardBitSet.get( rightKey.ordinal()) && !keyboardBitSet.get( leftKey.ordinal());
+        return KBitSet.get( rightK.ordinal()) && !KBitSet.get( leftK.ordinal());
     }
 
     public boolean isFirePrimaryWeapon() {
-        return keyboardBitSet.get( primaryWeaponKey.ordinal());
+        return KBitSet.get( primaryK.ordinal());
     }
 
     public boolean isFireSecondaryWeapon() {
-        return keyboardBitSet.get( secondaryWeaponKey.ordinal());
+        return KBitSet.get( secondaryWK.ordinal());
     }
 
 }
