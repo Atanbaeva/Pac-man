@@ -1,82 +1,97 @@
 package com.example.midtermoop;
 
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.animation.Animation;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 
-import java.util.BitSet;
+public class Pacman extends Sprite {
 
-public class Input {
+    Animation animation;
+    protected int movement;
+    private Input input;
+    private double speed;
+    SoundE SoundE;
+    boolean timer;
 
-    private BitSet KBitSet = new BitSet();
 
-    private KeyCode upK = KeyCode.UP;
-    private KeyCode downK = KeyCode.DOWN;
-    private KeyCode leftK = KeyCode.LEFT;
-    private KeyCode rightK = KeyCode.RIGHT;
-    private KeyCode primaryK = KeyCode.SPACE;
-    private KeyCode secondaryWK = KeyCode.CONTROL;
+    public Pacman(Pane layer, Image image, double x, double y, double dx, double dy, double speed, Input input, SoundE SE) {
 
-    Scene scene;
+        super(layer, image, x, y,  dx, dy);
 
-    public Input( Scene scene) {
-        this.scene = scene;
-    }
+        this.speed = speed;
+        this.input = input;
+        SoundE = SE;
 
-    public void addListeners() {
-
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, keyPressedEventHandler);
-        scene.addEventFilter(KeyEvent.KEY_RELEASED, keyReleasedEventHandler);
 
     }
 
-    public void removeListeners() {
-
-        scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyPressedEventHandler);
-        scene.removeEventFilter(KeyEvent.KEY_RELEASED, keyReleasedEventHandler);
-
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 
-    private EventHandler<KeyEvent> keyPressedEventHandler = new EventHandler<KeyEvent>() {
-        @Override
-        public void handle(KeyEvent event) {
-            KBitSet.set(event.getCode().ordinal(), true);
 
+    public void InputP() {
+
+        if( input.isMoveUp()) {
+            movement = 1;
+            Xdir = 0;
+            Ydir = -speed;
+
+        } else if( input.isMoveDown()) {
+            movement = 2;
+            Ydir = speed;
+            Xdir = 0;
         }
-    };
 
-    private EventHandler<KeyEvent> keyReleasedEventHandler = new EventHandler<KeyEvent>() {
-        @Override
-        public void handle(KeyEvent event) {
-            KBitSet.set(event.getCode().ordinal(), false);
+        if( input.isMoveLeft()) {
+            movement = 3;
+            Xdir = -speed;
+            Ydir = 0;
 
+        } else if( input.isMoveRight()) {
+            movement = 4;
+            Xdir = speed;
+            Ydir = 0;
         }
-    };
 
-    public boolean isMoveUp() {
-        return KBitSet.get( upK.ordinal()) && !KBitSet.get( downK.ordinal());
+
 
     }
 
-    public boolean isMoveDown() {
-        return KBitSet.get( downK.ordinal()) && !KBitSet.get( upK.ordinal());
+    public boolean imageTimer() {
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        timer = true;
+                    }
+                },
+                50
+        );
+
+        return timer;
     }
 
-    public boolean isMoveLeft() {
-        return KBitSet.get( leftK.ordinal()) && !KBitSet.get( rightK.ordinal());
+    @Override
+    public void Mot() {
+        super.Mot();
+
+        Bonus();
     }
 
-    public boolean isMoveRight() {
-        return KBitSet.get( rightK.ordinal()) && !KBitSet.get( leftK.ordinal());
-    }
+    private void Bonus() {
 
-    public boolean isFirePrimaryWeapon() {
-        return KBitSet.get( primaryK.ordinal());
-    }
+        if( Y < 0 ) {
+            Y = 0;
+        } else if( (Y + HEIGHT) > size.SCENE_H ) {
+            Y = size.SCENE_H- HEIGHT;
+        }
 
-    public boolean isFireSecondaryWeapon() {
-        return KBitSet.get( secondaryWK.ordinal());
+        if( X < 0) {
+            X = 0;
+        } else if( (X + WIDTH) > size.SCENE_W ) {
+            X = size.SCENE_W- WIDTH;
+        }
     }
 
 }
