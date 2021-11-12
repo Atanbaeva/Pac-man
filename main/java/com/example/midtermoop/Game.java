@@ -30,11 +30,11 @@ public class Game extends Application {
     Image enemyImage, enemyImage2, enemyImage3, enemyImage4;
     Image BG_Maze;
 
-    MySounds mySounds;
+    SoundE mySounds;
     boolean respawn = false, respawn2 = false, respawn3 = false, respawn4 = false;
     protected ArrayList<Rectangle> r;
     protected Pacman player;
-    protected ArrayList<Ghost> enemies = new ArrayList<>();
+    protected ArrayList<Enemy> enemies = new ArrayList<>();
 
     ArrayList<Circle> dots;
     ArrayList<Circle> bigDots;
@@ -43,7 +43,7 @@ public class Game extends Application {
     boolean collision2 = false;
     Group root = new Group();
     Scene scene;
-    Ghost ghost1,ghost2,ghost3,ghost4;
+    Enemy enemy1, enemy2, enemy3, enemy4;
     ArrayList<Rectangle> lives;
 
 
@@ -55,37 +55,35 @@ public class Game extends Application {
 
 
 
-        // Modification possible de la taille d'affichage dans Settings
         BG_Maze = new Image ("images/Pac-ManMaze_448x576.png");
         ImageView imageView = new ImageView (BG_Maze);
         playfieldLayer.getChildren().add(imageView);
         root.getChildren().add(playfieldLayer);
         root.getChildren().add(gameOver);
-        scene = new Scene( root, Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT);
+        scene = new Scene( root, size.SCENE_W, size.SCENE_H);
         primaryStage.setScene(scene);
         primaryStage.setWidth(464);
         primaryStage.setHeight(614);
         primaryStage.show();
 
-        mySounds = new MySounds();
-        mySounds.playClip(1);
+        mySounds = new SoundE();
+        mySounds.MusicS(1);
 
         drawRectangles();
         drawDots();
         loadGame();
         updateLoc();
-        moveGhosts(ghost1, ghost2,ghost3, ghost4);
+        moveGhosts(enemy1, enemy2, enemy3, enemy4);
 
 
-        // Boucle principale.
         AnimationTimer gameLoop = new AnimationTimer() {
 
             @Override
             public void handle(long now) {
                 changeSpot();
-                player.processInput();
+                player.InputP();
                 checkGhosts();
-                player.move();
+                player.Mot();
                 boxCollide();
                 dotCollide();
                 checkCollisions();
@@ -97,10 +95,9 @@ public class Game extends Application {
 
     }
 
-    //Détection collision avec murs
     public void checkGhosts() {
         for( Rectangle r: r) {
-            for( Ghost enemy: enemies) {
+            for( Enemy enemy: enemies) {
                 if( enemy.collidesWith(r)) {
                     enemy.collision2 = true;
                 }
@@ -109,9 +106,8 @@ public class Game extends Application {
         moveGhostsCollides();
     }
 
-    // Mouvement ghosts lors d'une collision avec un mur
     public void moveGhostsCollides() {
-        for( Ghost enemy: enemies) {
+        for( Enemy enemy: enemies) {
             if( enemy.collision2) {
                 enemy.freeze();
                 enemy.dir = (int)(Math.random()*4);
@@ -121,13 +117,13 @@ public class Game extends Application {
     }
 
     public void changeSpot() {
-        if (player.x >= 424 && (player.y >= 260 && player.y <= 297)) {
-            player.x = 24;
-            player.y = 270;
+        if (player.X >= 424 && (player.Y >= 260 && player.Y <= 297)) {
+            player.X = 24;
+            player.Y = 270;
         }
-        else if(player.x <= 24 && (player.y >= 260 && player.y <= 297)) {
-            player.x = 424;
-            player.y = 272;
+        else if(player.X <= 24 && (player.Y >= 260 && player.Y <= 297)) {
+            player.X = 424;
+            player.Y = 272;
         }
     }
 
@@ -143,7 +139,7 @@ public class Game extends Application {
             gameOver.setText("WINNER");
             player.freeze();
             player.removeFromLayer();
-            for (Ghost ghost : enemies) {
+            for (Enemy ghost : enemies) {
                 ghost.removeFromLayer();
             }
             root.getChildren().add(gameOver);
@@ -161,57 +157,57 @@ public class Game extends Application {
 
         r = new ArrayList<Rectangle>();
 
-        r.add(new Rectangle(40, 88, 48, 32)); //1
-        r.add(new Rectangle(120, 88, 64, 32)); //2
-        r.add(new Rectangle(264, 88, 64, 32)); //3
-        r.add(new Rectangle(360, 88, 48, 32)); //4
-        r.add(new Rectangle(40, 152, 48, 16)); //5
-        r.add(new Rectangle(360, 152, 48, 16)); //6
-        r.add(new Rectangle(120, 152, 16, 112)); //7
-        r.add(new Rectangle(168, 152, 112, 16)); //8
-        r.add(new Rectangle(312, 152, 16, 112)); //9
-        r.add(new Rectangle(264, 200, 50, 16)); //10
-        r.add(new Rectangle(134, 200, 50, 16)); //11
-        r.add(new Rectangle(216, 166, 16, 50)); //12
+        r.add(new Rectangle(40, 88, 48, 32));
+        r.add(new Rectangle(120, 88, 64, 32));
+        r.add(new Rectangle(264, 88, 64, 32));
+        r.add(new Rectangle(360, 88, 48, 32));
+        r.add(new Rectangle(40, 152, 48, 16));
+        r.add(new Rectangle(360, 152, 48, 16));
+        r.add(new Rectangle(120, 152, 16, 112));
+        r.add(new Rectangle(168, 152, 112, 16));
+        r.add(new Rectangle(312, 152, 16, 112));
+        r.add(new Rectangle(264, 200, 50, 16));
+        r.add(new Rectangle(134, 200, 50, 16));
+        r.add(new Rectangle(216, 166, 16, 50));
 
-        r.add(new Rectangle(168, 248, 40, 8)); //13
-        r.add(new Rectangle(240, 248, 40, 8)); //14
-        r.add(new Rectangle(168, 256, 8, 48)); //15
-        r.add(new Rectangle(272, 256, 8, 48)); //16
-        r.add(new Rectangle(168, 304, 112, 8)); //17
+        r.add(new Rectangle(168, 248, 40, 8));
+        r.add(new Rectangle(240, 248, 40, 8));
+        r.add(new Rectangle(168, 256, 8, 48));
+        r.add(new Rectangle(272, 256, 8, 48));
+        r.add(new Rectangle(168, 304, 112, 8));
 
-        r.add(new Rectangle(120, 296, 16, 64)); //18
-        r.add(new Rectangle(312, 296, 16, 64)); //19
-        r.add(new Rectangle(168, 344, 112, 16)); //20
-        r.add(new Rectangle(216, 360, 16, 48)); //21
-        r.add(new Rectangle(120, 392, 64, 16)); //22
-        r.add(new Rectangle(264, 392, 64, 16)); //23
-        r.add(new Rectangle(40, 392, 48, 16)); //24
-        r.add(new Rectangle(72, 408, 16, 48)); //25
-        r.add(new Rectangle(360, 392, 48, 16)); //26
-        r.add(new Rectangle(360, 408, 16, 48)); //27
-        r.add(new Rectangle(168, 440, 112, 16)); //28
-        r.add(new Rectangle(216, 456, 16, 48)); //29
-        r.add(new Rectangle(120, 440, 16, 48)); //30
-        r.add(new Rectangle(40, 488, 144, 16)); //31
-        r.add(new Rectangle(312, 440, 16, 48)); //32
-        r.add(new Rectangle(264, 488, 144, 16)); //33
+        r.add(new Rectangle(120, 296, 16, 64));
+        r.add(new Rectangle(312, 296, 16, 64));
+        r.add(new Rectangle(168, 344, 112, 16));
+        r.add(new Rectangle(216, 360, 16, 48));
+        r.add(new Rectangle(120, 392, 64, 16));
+        r.add(new Rectangle(264, 392, 64, 16));
+        r.add(new Rectangle(40, 392, 48, 16));
+        r.add(new Rectangle(72, 408, 16, 48));
+        r.add(new Rectangle(360, 392, 48, 16));
+        r.add(new Rectangle(360, 408, 16, 48));
+        r.add(new Rectangle(168, 440, 112, 16));
+        r.add(new Rectangle(216, 456, 16, 48));
+        r.add(new Rectangle(120, 440, 16, 48));
+        r.add(new Rectangle(40, 488, 144, 16));
+        r.add(new Rectangle(312, 440, 16, 48));
+        r.add(new Rectangle(264, 488, 144, 16));
 
-        r.add(new Rectangle(0, 48, 448, 8)); //34
-        r.add(new Rectangle(216, 56, 16, 64)); //35
-        r.add(new Rectangle(0, 56, 8, 144)); //36
-        r.add(new Rectangle(440, 56, 8, 144)); //37
+        r.add(new Rectangle(0, 48, 448, 8));
+        r.add(new Rectangle(216, 56, 16, 64));
+        r.add(new Rectangle(0, 56, 8, 144));
+        r.add(new Rectangle(440, 56, 8, 144));
 
-        r.add(new Rectangle(0, 200, 88, 64)); //38
-        r.add(new Rectangle(360, 200, 88, 64)); //39
-        r.add(new Rectangle(0, 296, 88, 64)); //40
-        r.add(new Rectangle(360, 296, 88, 64)); //41
+        r.add(new Rectangle(0, 200, 88, 64));
+        r.add(new Rectangle(360, 200, 88, 64));
+        r.add(new Rectangle(0, 296, 88, 64));
+        r.add(new Rectangle(360, 296, 88, 64));
 
-        r.add(new Rectangle(0, 360, 8, 176)); //42
-        r.add(new Rectangle(8, 440, 32, 16)); //43
-        r.add(new Rectangle(408, 440, 32, 16)); //44
-        r.add(new Rectangle(440, 360, 8, 176)); //45
-        r.add(new Rectangle(0, 536, 448, 8)); //46
+        r.add(new Rectangle(0, 360, 8, 176));
+        r.add(new Rectangle(8, 440, 32, 16));
+        r.add(new Rectangle(408, 440, 32, 16));
+        r.add(new Rectangle(440, 360, 8, 176));
+        r.add(new Rectangle(0, 536, 448, 8));
         for(Rectangle block : r){
             block.setFill(Color.TRANSPARENT);;
             block.setStroke(Color.TRANSPARENT);
@@ -235,7 +231,6 @@ public class Game extends Application {
     Circle temp2;
     boolean hollow = false;
 
-    //Check si Pacman mange des points
     private void dotCollide() {
 
         collision = false;
@@ -246,7 +241,7 @@ public class Game extends Application {
                 collision = true;
                 temp = dot;
                 removeDot(dot);
-                mySounds.playClip(2);
+                mySounds.MusicS(2);
             }
         }
         for (Circle bigDot : bigDots) {
@@ -266,7 +261,7 @@ public class Game extends Application {
                         },
                         5000
                 );
-                mySounds.playClip(2);
+                mySounds.MusicS(2);
             }
         }
         if (collision2 == true) {
@@ -296,8 +291,7 @@ public class Game extends Application {
 
         Image image = playerImage;
 
-        // Placement Pacman
-        double x = (Settings.SCENE_WIDTH - image.getWidth()) / 2.0;
+        double x = (size.SCENE_W - image.getWidth()) / 2.0;
         double y = 412;
 
         player = new Pacman(playfieldLayer, image, x, y, 0, 0, 1, input,mySounds);
@@ -307,25 +301,25 @@ public class Game extends Application {
         Image image3 = enemyImage2;
         Image image4 = enemyImage3;
         Image image5 = enemyImage4;
-        ghost1 = new Ghost( playfieldLayer, image2, x, 280, 0, 0);
-        ghost2 = new Ghost(playfieldLayer, image3, x + 20, 280, 0, 0);
-        ghost3 = new Ghost(playfieldLayer,image4, x - 20, 280, 0,0);
-        ghost4 = new Ghost(playfieldLayer, image5, x, 260, 0,0);
+        enemy1 = new Enemy( playfieldLayer, image2, x, 280, 0, 0);
+        enemy2 = new Enemy(playfieldLayer, image3, x + 20, 280, 0, 0);
+        enemy3 = new Enemy(playfieldLayer,image4, x - 20, 280, 0,0);
+        enemy4 = new Enemy(playfieldLayer, image5, x, 260, 0,0);
         Animation animatePac = new SpriteAnimation(
                 player.imageView, Duration.millis(10000),player,
-                ghost4.imageView, ghost4,
-                ghost2.imageView, ghost2,
-                ghost1.imageView, ghost1,
-                ghost3.imageView, ghost3);
+                enemy4.imageView, enemy4,
+                enemy2.imageView, enemy2,
+                enemy1.imageView, enemy1,
+                enemy3.imageView, enemy3);
         animatePac.setCycleCount(Animation.INDEFINITE);
         animatePac.play();
 
-        enemies.add(ghost1);
-        enemies.add(ghost2);
-        enemies.add(ghost3);
-        enemies.add(ghost4);
+        enemies.add(enemy1);
+        enemies.add(enemy2);
+        enemies.add(enemy3);
+        enemies.add(enemy4);
 
-        moveGhosts(ghost1,ghost2,ghost3,ghost4);
+        moveGhosts(enemy1, enemy2,enemy3, enemy4);
         counter[0] = 0;
     }
 
@@ -337,7 +331,6 @@ public class Game extends Application {
 
     public void updateLoc() {
 
-        //ghost1
         locations.add(new int[] {220,235});
         locations.add(new int[] {220,232});
         locations.add(new int[] {224,230});
@@ -400,7 +393,6 @@ public class Game extends Application {
         }
 
 
-        //ghost2
         locations2.add(new int[] {220,235});
         locations2.add(new int[] {220,232});
         locations2.add(new int[] {224,230});
@@ -468,7 +460,6 @@ public class Game extends Application {
             locations2.add(new int[] {locations2.get(locations2.size() - 1)[0] + 5, 230});
         }
 
-        //ghost3
         locations3.add(new int[] {220,232});
         locations3.add(new int[] {224,230});
         for (int i = 0; i < 3; i++) {
@@ -547,7 +538,7 @@ public class Game extends Application {
             locations3.add(new int[] {locations3.get(locations3.size() - 1)[0] + 5, 230});
         }
 
-        //ghost4
+
         locations4.add(new int[] {224,230});
         for (int i = 0; i < 7; i++) {
             locations4.add(new int[] {locations4.get(locations4.size() - 1)[0] - 5, 230});
@@ -644,7 +635,7 @@ public class Game extends Application {
     int [] counter3 = {0};
     int [] counter4 = {0};
 
-    public void moveGhosts(Ghost ghost, Ghost ghost2, Ghost ghost3, Ghost ghost4) {
+    public void moveGhosts(Enemy ghost, Enemy ghost2, Enemy ghost3, Enemy ghost4) {
 
 
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.07), ev -> {
@@ -723,13 +714,13 @@ public class Game extends Application {
 
     }
 
-    int totalLife = 2; //total lives
+    int totalLife = 2;
 
     int checkIt = -1;
 
     private void checkCollisions() {
         collision = false;
-        for( Ghost enemy: enemies) {
+        for( Enemy enemy: enemies) {
             if (enemy == (enemies.get(0))) {
                 checkIt = 0;
             }
@@ -750,9 +741,9 @@ public class Game extends Application {
                     respawn4 = true;
                     collision = true;
                     player.freeze();
-                    player.x = 0;
-                    player.y = 0;
-                    mySounds.playClip(4);
+                    player.X = 0;
+                    player.Y = 0;
+                    mySounds.MusicS(4);
                     totalLife -= 1;
                     if (totalLife == -1) {
 
@@ -766,7 +757,7 @@ public class Game extends Application {
                         player.freeze();
                         player.removeFromLayer();
 
-                        for (Ghost ghost : enemies) {
+                        for (Enemy ghost : enemies) {
                             ghost.removeFromLayer();
                         }
                         for (Circle dot : dots) {
@@ -782,8 +773,8 @@ public class Game extends Application {
 
 
                     player.updateUI(225,412);
-                    player.dx = 0;
-                    player.dy = 0;
+                    player.Xdir = 0;
+                    player.Ydir = 0;
 
                     break;
                 }
@@ -802,7 +793,7 @@ public class Game extends Application {
                     if (checkIt == 3) {
                         respawn4 = true;
                     }
-                    mySounds.playClip(3);
+                    mySounds.MusicS(3);
                 }
 
             }
